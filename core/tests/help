@@ -1,0 +1,134 @@
+# O django cria um arquivo chamado tests.py automaticamente dentro da pasta da aplicação.
+# Podemos deletar esse arquivo e criar um diretório tests dentro da pasta da aplicação e criar um arquivo de
+# teste para cada módulo.
+# Para isso, dentro da pasta tests devemos criar um arquivo __init__.py em branco apenas para o python saber que
+# esse diretório é um pacote.
+
+# CONFIGURAR O ARQUIVO SETTINGS.PY #
+    colocar o DEBUG como True
+    descomentar o EMAIL_BACKEND
+
+
+# IMPORTS MECESSÁRIOS  PARA TESTES SIMPLES #
+
+    from django.test import TestCase
+
+* Criamos uma classe que instancia a TestCase. exemplo: Se temos uma classe a ser testada chamada de "class Produto:"
+* o ideal seria criar uma classe chamada "class ProdutoTestCase(TextCase):
+
+* Para que a classe TestCase funcione, cada método deverá iniciar com o nome test. exemplo caso haja dentro de models
+# um método chamado "def exemplo(self)" o método de teste deve se chamar "def test_exemplo(self)
+
+# COMANDO PARA TESTAR O PROGRAMA #
+
+* Para rodar o teste simples do pyton devemos estar dentro do diretório do projeto
+(onde se encotra o arquivo manage.py) e rodar o seguinte comando:
+
+    python manage.py test
+
+---------------------------------------------------------------------------------------
+# FERRAMENTAS DE TERCEIROS PARA TESTES AUTOMATIZADOS #
+
+# INSTALAÇÕES NECESSÁRIAS E RECOMENDADAS #
+
+    pip install model_mommy
+
+        ( O model_mommy isntancia objetos das classes a serem testadas automaticamete ) para testar os models
+
+    pip install coverage
+
+        ( O coverage nos mostra quais funções precisamos testar ) muito útil.
+
+# No diretório raiz do projeto (onde se encontra o manage.py) criar um arquivo chamado " .coveragerc ".
+# e nesse arquivo escrever os módulos que serão ignorados pelo coverage
+
+
+# CONFIGURAÇÃO DO ARQUIVO .coveragerc #
+---------------------------------------------
+[run]
+source = .
+
+omit =
+    */__init__.py
+    */settings.py
+    */manage.py
+    */wsgi.py
+    */asgi.py
+    */apps.py
+    */urls.py
+    */admin.py
+    */migrations/*
+    */tests/*
+-----------------------------------------------
+
+# RODAR O COVERAGE #
+    - entrar no diretório do projeto onde se encontra o arquivo manage.oy e rodar o comando:
+
+        coverage run manage.py test
+
+# VER O RELATÓRIO DO COVERAGE #
+    - dentro do mesmo diretório rodar o comando:
+
+        coverage report
+
+# O COVERAGE CRIA UM DIRETÓRIO CHAMADO " htmlcov " COM OS RESULTADOS EM html.
+    antes precisamos adicionar no .gitignore a linha " htmlcov/* " par o git nõa indexar.
+    e depois rodar o seguinte comando:
+
+        coverage html
+
+    - se estivermos dentro da pasta htmlcov podemos iniciar um servidor http temporario com o comando:
+
+        python -m http.server
+
+# OBS.: TODA VEZ QUE RODAMOS O COVEREGE ELE VAI RECRIAR ESSE DIRETÓRIO htmlcov #
+
+
+# IMPORTS NECESSÁRIOS PARA REALIZAR OS TESTES COM FERRAMENTAS DE TERCEIROS #
+
+[import]    import uuid
+
+        ( O uuid é  do próprio python. Ele é usado para criar um id aleatório "não é ferramenta de teste")
+
+[import]    from django.teste import TestCase
+
+        ( O TestCase é a ferramenta de testes do próprio python )
+
+[import]    from model_mommy import mommy
+
+        ( O moomy será usado para instanciar os objetos das classes dos models )
+
+[import]    from django.test import Client
+
+        ( A classe Client do TestCase é usada para criar um clietne navegador para executar requisições http
+          sem precisasr ficar abrindo o navegador. É usado para testar as views )
+
+* obs. Se houver alguma função fora de classe no arquivo models também precisa ser importado ex:
+
+[import]    from core.models import get_file_path
+
+            ( essa função é a que esta sendo usada para gerar o nome do arquivo aleatório pelo uuid )
+
+[import]    from django.urls import reverse_lazy
+
+            ( esse pacote não é de teste, é para gerar o redirecionamento da requisição http )
+
+
+* Dica " cd .. " para voltar um diretório e " rm -rf htmocov " para apagar o relartório do teste anterior.
+
+# PARA RODAR O TESTE É SÓ RODAR O COMANDO NOVAMENTE #
+
+    coverage run manage.py test
+
+# PARA CRIAR O RELATÓRIO EM HTML #
+
+    coverage html
+
+# RODAR O SERVIDOR TEMPORÁRIO #
+
+    python  -m http.server
+
+
+
+
+
